@@ -1,0 +1,13 @@
+void loadJBIFileInLocalSys ( QString filePath ) {
+    QDir dir ( filePath );
+
+    foreach ( QFileInfo fileInfo, dir.entryInfoList ( QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot ) ) {
+        if ( fileInfo.isFile() && fileInfo.completeSuffix() == TEXT_JBI ) {
+            QString fileName = fileInfo.baseName();
+
+            if ( !hmi.JBIs.existProgram ( fileName.toStdString() ) )
+                hmi.JBIs.loadFile ( fileName.toStdString() );
+        } else if ( fileInfo.isDir() )
+            loadJBIFileInLocalSys ( fileInfo.absoluteFilePath() );
+    }
+}
